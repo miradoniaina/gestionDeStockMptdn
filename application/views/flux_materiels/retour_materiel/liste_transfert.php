@@ -1,0 +1,422 @@
+<?php
+$this->load->view('templates/header');
+?>
+
+<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/datetimepicker-master/'); ?>/jquery.datetimepicker.css"/>
+
+<title>Flux Matériels</title>
+</head>
+
+<!-- Trigger the modal with a button -->
+<!-- Modal -->
+
+<input id="exception" type="hidden" value="<?php echo $exception; ?>">
+
+<body class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col">
+                <div class="left_col scroll-view">
+                    <!--Logo-->
+                    <?php $this->load->view('templates/logo'); ?>
+                    <!--Logo-->
+
+                    <div class="clearfix"></div>
+
+                    <!-- menu profile quick info -->
+                    <div class="profile clearfix">
+                        <div class="profile_pic">
+                            <!--<img src="<?php // echo base_url()                                                              ?>/assets/images/img.jpg" alt="..." class="img-circle profile_img">-->
+                        </div>
+                        <div class="profile_info">
+                            <span>Bienvenue,</span>
+                            <h2><?php echo $this->session->userdata("nom") . " " . $this->session->userdata("prenom"); ?></h2>
+                        </div>
+                    </div>
+                    <!-- /menu profile quick info -->
+
+                    <br />
+
+                    <!-- sidebar menu -->
+                    <?php $this->load->view("templates/sidebarmenufooter"); ?>
+                    <!-- /sidebar menu -->
+
+                    <!-- /menu footer buttons -->
+
+                    <!-- /menu footer buttons -->
+                    <!-- sidebar menu -->
+
+                    <!-- /sidebar menu -->
+
+                    <!-- /menu footer buttons -->
+
+                    <!-- /menu footer buttons -->
+                </div>
+            </div>
+
+            <!-- top navigation -->
+            <div class="top_nav">
+                <div class="nav_menu">
+                    <nav>
+                        <div class="nav toggle">
+                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                        </div>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="">
+                                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <!--<img src="<?php // echo base_url();                                                              ?>/assets/images/img.jpg" alt="">-->
+                                    <?php echo $this->session->userdata("prenom"); ?>
+                                    <span class=" fa fa-angle-down"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                    <li><a href="javascript:;"> Profil </a></li>
+                                    <!--                                    <li>
+                                                                            <a href="javascript:;">
+                                                                                <span class="badge bg-red pull-right">50%</span>
+                                                                                <span>Settings</span>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li><a href="javascript:;">Help</a></li>-->
+                                    <li><a href="<?php echo base_url('index.php/accesComptesController/logout') ?>"><i class="fa fa-sign-out pull-right"></i> Déconnexion</a></li>
+                                </ul>
+                            </li>
+
+                            <li role="presentation" class="dropdown">
+                                <!--                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="fa fa-envelope-o"></i>
+                                                                    <span class="badge bg-green">6</span>
+                                                                </a>-->
+                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                    <li>
+                                        <a>
+                                            <!--<span class="image"><img src="<?php // echo base_url('assets')                                                              ?>/images/img.jpg" alt="Profile Image" /></span>-->
+                                            <span>
+                                                <span>John Smith</span>
+                                                <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a>
+                                            <!--<span class="image"><img src="<?php // echo base_url('assets')                                                              ?>/images/img.jpg" alt="Profile Image" /></span>-->
+                                            <span>
+                                                <span>John Smith</span>
+                                                <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a>
+                                            <!--<span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>-->
+                                            <span>
+                                                <span>John Smith</span>
+                                                <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a>
+                                            <!--<span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>-->
+                                            <span>
+                                                <span>John Smith</span>
+                                                <span class="time">3 mins ago</span>
+                                            </span>
+                                            <span class="message">
+                                                Film festivals used to be do-or-die moments for movie makers. They were where...
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <div class="text-center">
+                                            <a>
+                                                <strong>See All Alerts</strong>
+                                                <i class="fa fa-angle-right"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <!-- /top navigation -->
+
+            <!-- page content -->
+            <div class="right_col" role="main">
+
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-5">
+                        <div class="page-title">
+                            <div class="text-center">
+                                <h3>Listes des Transferts Matériels</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#">Settings 1</a>
+                                        </li>
+                                        <li><a href="#">Settings 2</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div id="datatable-checkbox_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="dataTables_length" id="datatable-checkbox_length">
+                                            <label>Matériels non récupérer 
+<!--                                                <select name="datatable-checkbox_length" aria-controls="datatable-checkbox" class="form-control input-sm">
+                                                    <option value="10">10</option>
+                                                    <option value="25">25</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                </select> entries-->
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div id="datatable-checkbox_filter" class="dataTables_filter">
+                                            <!--                                            <label>Search:
+                                                                                            <input type="search" class="form-control input-sm" placeholder="" aria-controls="datatable-checkbox">
+                                                                                        </label>    -->
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table id="datatable-checkbox" class="table table-striped table-bordered bulk_action dataTable no-footer" role="grid" aria-describedby="datatable-checkbox_info">
+                                            <thead>
+                                                <tr role="row" class="">
+                                                    <th class="sorting" tabindex="0" aria-controls="datatable-checkbox" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 180px;">Matériel</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="datatable-checkbox" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 150px;">Transfert</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="datatable-checkbox" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 75px;">Type</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="datatable-checkbox" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 132px;">Quantité(s)</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="datatable-checkbox" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 190px;">Date de récupération</th>
+                                                    <th class="sorting_desc" tabindex="0" aria-controls="datatable-checkbox" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 180px;" aria-sort="descending">Auteur du transfert</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="datatable-checkbox" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 90px;">Porte Source</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="datatable-checkbox" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 90px;">Porte Dest</th>
+                                                    <th class="sorting" tabindex="0" aria-controls="datatable-checkbox" rowspan="1" colspan="1" aria-label=": activate to sort column ascending" style="width: 150px;">
+                                                        Action
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php for ($i = 0; $i < count($transferts); $i++) { ?>
+                                                    <tr role="row" class="odd">
+                                                        <td class=""><?php echo $transferts[$i]->designation; ?></td>
+                                                        <td class="sorting_1"><?php echo $transferts[$i]->transfert ?></td>
+                                                        <td class=""><?php echo $transferts[$i]->type; ?></td>
+                                                        <td class=""><?php echo $transferts[$i]->quantite; ?></td>
+                                                        <td class=""><?php echo $transferts[$i]->date_recuperation; ?></td>
+                                                        <td class=""><?php echo $transferts[$i]->prenom; ?></td>
+                                                        <td class=""><?php echo $transferts[$i]->porte_source; ?></td>
+                                                        <td class="">
+                                                            <?php echo $transferts[$i]->porte_dest; ?>
+                                                        </td>
+                                                        <th class="">
+                                                            <a href="<?php echo base_url("index.php/retour_materiel/listeTransfertController/fiche/" . $transferts[$i]->id_detail_transfert); ?>" class="fa fa-check btn btn-primary"></a>
+                                                        </th>
+                                                    </tr>
+                                                <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <!--                                        <div class="dataTables_info" id="datatable-checkbox_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries
+                                                                                </div>-->
+
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <div class="dataTables_paginate paging_simple_numbers" id="datatable-checkbox_paginate">
+                                            <ul class="pagination">
+                                                <li class="paginate_button previous disabled" id="datatable-checkbox_previous">
+                                                    <a href="#" aria-controls="datatable-checkbox" data-dt-idx="0" tabindex="0">Previous</a>
+                                                </li>
+                                                <li class="paginate_button active">
+                                                    <a href="#" aria-controls="datatable-checkbox" data-dt-idx="1" tabindex="0">1</a>
+                                                </li>
+                                                <li class="paginate_button ">
+                                                    <a href="#" aria-controls="datatable-checkbox" data-dt-idx="2" tabindex="0">2</a>
+                                                </li>
+                                                <li class="paginate_button ">
+                                                    <a href="#" aria-controls="datatable-checkbox" data-dt-idx="3" tabindex="0">3</a>
+                                                </li>
+                                                <li class="paginate_button ">
+                                                    <a href="#" aria-controls="datatable-checkbox" data-dt-idx="4" tabindex="0">4</a>
+                                                </li>
+                                                <li class="paginate_button ">
+                                                    <a href="#" aria-controls="datatable-checkbox" data-dt-idx="5" tabindex="0">5</a>
+                                                </li><li class="paginate_button ">
+                                                    <a href="#" aria-controls="datatable-checkbox" data-dt-idx="6" tabindex="0">6</a>
+                                                </li>
+                                                <li class="paginate_button next" id="datatable-checkbox_next">
+                                                    <a href="#" aria-controls="datatable-checkbox" data-dt-idx="7" tabindex="0">Next</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2></h2>
+                                <ul class="nav navbar-right panel_toolbox">
+                                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li><a href="#">Settings 1</a>
+                                            </li>
+                                            <li><a href="#">Settings 2</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a class="close-link"><i class="fa fa-close"></i></a>
+                                    </li>
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <div id="datatable-checkbox_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="dataTables_length" id="datatable-checkbox_length">
+                                                <label>Mes Transferts
+    <!--                                                <select name="datatable-checkbox_length" aria-controls="datatable-checkbox" class="form-control input-sm">
+                                                        <option value="10">10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select> entries-->
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div id="datatable-checkbox_filter" class="dataTables_filter">
+                                                <!--                                            <label>Search:
+                                                                                                <input type="search" class="form-control input-sm" placeholder="" aria-controls="datatable-checkbox">
+                                                                                            </label>    -->
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <table id="datatable-checkbox" class="table table-striped table-bordered bulk_action dataTable no-footer" role="grid" aria-describedby="datatable-checkbox_info">
+                                                <thead>
+                                                    <tr role="row" class="">
+                                                        <th class="sorting" tabindex="0" aria-controls="datatable-checkbox" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 5px;">#</th>
+                                                        <th  style="width: 70px;">Date du transfert</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php for ($i = 0; $i < count($mes_transfert); $i++) { ?>
+                                                        <tr role="row" class="odd">
+                                                            <td class="">
+                                                                <a href="<?php echo base_url('index.php/retour_materiel/ListeTransfertController/transfertDetails/$idTransfert/transfertDetails/' . $mes_transfert[$i]->id_transfert) ?>"><?php echo $i + 1; ?></a>
+                                                            </td>
+                                                            <td class="">
+                                                                <a href="<?php echo base_url('index.php/retour_materiel/ListeTransfertController/transfertDetails/' . $mes_transfert[$i]->id_transfert) ?>"><?php echo $mes_transfert[$i]->date_transfert; ?></a>
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </tbody>
+                                            </table>
+                                            <div class="text-left">
+                                                <div class="text-left dataTables_paginate paging_simple_numbers" id="datatable-checkbox_paginate">
+                                                    <ul class="pagination">
+                                                        <li class="paginate_button previous disabled" id="datatable-checkbox_previous">
+                                                            <a href="#" aria-controls="datatable-checkbox" data-dt-idx="0" tabindex="0">Previous</a>
+                                                        </li>
+                                                        <li class="paginate_button active">
+                                                            <a href="#" aria-controls="datatable-checkbox" data-dt-idx="1" tabindex="0">1</a>
+                                                        </li>
+                                                        <li class="paginate_button ">
+                                                            <a href="#" aria-controls="datatable-checkbox" data-dt-idx="2" tabindex="0">2</a>
+                                                        </li>
+                                                        <li class="paginate_button ">
+                                                            <a href="#" aria-controls="datatable-checkbox" data-dt-idx="3" tabindex="0">3</a>
+                                                        </li>
+                                                        <li class="paginate_button ">
+                                                            <a href="#" aria-controls="datatable-checkbox" data-dt-idx="4" tabindex="0">4</a>
+                                                        </li>
+                                                        <li class="paginate_button ">
+                                                            <a href="#" aria-controls="datatable-checkbox" data-dt-idx="5" tabindex="0">5</a>
+                                                        </li><li class="paginate_button ">
+                                                            <a href="#" aria-controls="datatable-checkbox" data-dt-idx="6" tabindex="0">6</a>
+                                                        </li>
+                                                        <li class="paginate_button next" id="datatable-checkbox_next">
+                                                            <a href="#" aria-controls="datatable-checkbox" data-dt-idx="7" tabindex="0">Next</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <!-- /page content -->
+
+            <?php $this->load->view('templates/footer'); ?>
+
+            <script>
+                $(document).ready(function () {
+
+                    if ($("#exception").val() != "") {
+                        alert($('#exception').val());
+                    }
+                });
+            </script>
+
+            <script src="<?php echo base_url('assets/datetimepicker-master/build'); ?>/jquery.datetimepicker.full.js"></script>
+            <script src="<?php echo base_url('assets/myJs/dateTimePicker.js') ?>"></script>
+            </body>
+
+            </html>
