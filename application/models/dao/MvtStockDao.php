@@ -13,59 +13,136 @@
  */
 class MvtStockDao extends BaseService {
 
-    //put your code here
-
     function __construct() {
         parent::__construct();
-        $this->load->model("dao/CodeBarreDao");
+        $this->load->model("modele/MvtStockModele");
+        $this->load->model("util/Pagination");
     }
 
-    function insertMvt($mvtModele) {
+    function insert($mvtStockModele) {
         try {
-            $sql = "INSERT INTO mvt_de_stock(
-            id_mvt_stock, id_materiel, id_sortie_interne, id_fournisseur, 
-            quantite, type, date_mvt, commentaire)
-    VALUES (nextval('mvt_de_stock_id_mvt_stock_seq'), " . $mvtModele->getIdMateriel() . ", null, " . $mvtModele->getIdFournisseur() . ", 
-            " . doubleval($mvtModele->getQuantite()) . ", '" . $mvtModele->getType() . "' ,'" . $mvtModele->getDateMvt()->format('Y-m-d H:i:s') . "', '" . $mvtModele->getCommentaire() . "')";
+            $sql = "INSERT INTO mvt_stock(
+                        id_mvt_stock, id_personnel, type, date_mvt, commentaire)
+                        VALUES (nextval('mvt_stock_id_mvt_stock_seq'), ?, ? , ? , ?)";
 
-            $this->db->query($sql);
+            $query = $this->db->query($sql, array($mvtStockModele->getIdPersonnel(), $mvtStockModele->getType(), $mvtStockModele->getDateMvtFormattedToInsert(), $mvtStockModele->getCommentaire()));
         } catch (Exception $ex) {
             throw $ex;
         }
     }
 
-    function findByIdWithCodeBarre($idMvt) {
+    function findAllEntreePage($limit, $page) {
+        try {
+            $offset = (($page - 1) * $limit) - ($page - 1);
+            if ($page <= 1) {
+                $offset = 0;
+            }
+            
+            $sql = "SELECT"
+                    . " * "
+                    . "FROM"
+                    . " mvt_stock "
+                    . "WHERE type= ? "
+                    . "ORDER BY date_mvt DESC "
+                    . "limit ? offset ?";
+            
+            $query = $this->db->query($sql, array('entrée', $limit, $offset) )->result();
 
-        $codeBarreDao = new CodeBarreDao();
+            $rets = [];
+            foreach ($query as $row) {
+                $ret = new MvtStockModele();
+                $ret->setId($row->id_mvt_stock);
+                $ret->setDateMvt($row->date_mvt);
+                $ret->setCommentaire($row->commentaire);
+                array_push($rets, $ret);
+            }
 
-        $sql = "SELECT * FROM mvt_stock_materiel_view WHERE id_mvt_stock = ?";
-        $query = $this->db->query($sql, array($idMvt));
-
-        $ret = [];
-
-        foreach ($query->result() as $ligne) {
-            $reti = new MvtStockModele();
-            $reti->setId($ligne->id_mvt_stock);
-            $reti->setCommentaire($ligne->commentaire);
-            $reti->setDateMvt($ligne->date_mvt);
-            $reti->setIdFournisseur($ligne->id_fournisseur);
-
-            $reti->setIdMateriel($ligne->id_materiel);
-            $reti->setMateriel($ligne->designation);
-//            $reti->setPrixUnitaire($ligne->prix_unitaire);
-            $reti->setQuantite($ligne->quantite);
-            $reti->setType($ligne->type);
-
-            $conditions_array = array(
-                'id_mvt_stock' => $idMvt
-            );
-
-            $reti->setCodebarres($codeBarreDao->findWhereAndEquals("code_barre", $conditions_array));
-
-            array_push($ret, $reti);
+            return $rets;
+        } catch (Exception $ex) {
+            throw $ex;
         }
-        $query->free_result();
-        return $ret[0];
+    }
+    
+    function getPaginationEntree($sizeConfig, $sizeTable, $first) {
+        $sql = "SELECT count(*) count FROM mvt_stock WHERE type = ? ";
+
+        $pagination = new Pagination();
+
+        $pagination->setSizeConfig($sizeConfig);
+        $pagination->setSizeAll($this->db->query($sql, 'entrée')->result()[0]->count);
+        $pagination->setSizePage($sizeTable);
+        $pagination->setFirst($first);
+        $pagination->calculLast();
+
+        return $pagination;
+    }
+
+    function findAllSortiePage($limit, $page) {
+        try {
+            $offset = (($page - 1) * $limit) - ($page - 1);
+
+            if ($page <= 1) {
+                $offset = 0;
+            }
+
+            $sql = "SELECT "
+                    . "* "
+                    . "FROM "
+                    . "mvt_stock "
+                    . "WHERE type= ? "
+                    . "ORDER BY date_mvt DESC "
+                    . "limit ? offset ?";
+            $query = $this->db->query($sql, array('sortie', $limit, $offset))->result();
+
+            $rets = [];
+            foreach ($query as $row) {
+                $ret = new MvtStockModele();
+                $ret->setId($row->id_mvt_stock);
+                $ret->setDateMvt($row->date_mvt);
+                $ret->setCommentaire($row->commentaire);
+                array_push($rets, $ret);
+            }
+
+            return $rets;
+        } catch (Exception $ex) {   
+            throw $ex;
+        }
+    }
+
+    function getPaginationSortie($sizeConfig, $sizeTable, $first) {
+        $sql = "SELECT count(*) count FROM mvt_stock WHERE type = ? ";
+
+        $pagination = new Pagination();
+
+        $pagination->setSizeConfig($sizeConfig);
+        $pagination->setSizeAll($this->db->query($sql, 'sortie')->result()[0]->count);
+        $pagination->setSizePage($sizeTable);
+        $pagination->setFirst($first);
+        $pagination->calculLast();
+
+        return $pagination;
+    }
+
+    function findById($idMvtStock, $nomTable = 'mvt_stock') {
+        try {
+            $rets = [];
+
+            $query = parent::findById($nomTable, $idMvtStock);
+
+            foreach ($query as $row) {
+                $ret = new MvtStockModele();
+                $ret->setId($row->id_mvt_stock);
+                $ret->setIdPersonnel($row->id_personnel);
+                $ret->setDateMvt($row->date_mvt);
+                $ret->setCommentaire($row->commentaire);
+                array_push($rets, $ret);
+            }
+
+
+            return $rets[0];
+        } catch (Exception $ex) {
+            throw $ex;
+        }
     }
 
 }

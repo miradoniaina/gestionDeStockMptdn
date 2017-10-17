@@ -32,17 +32,18 @@ class ListeTransfertController extends MY_Controller {
     }
     
     function fiche($i){
-        var_dump($i);
+//        var_dump($i);
     }
     
     function transfertDetails($idTransfert){
         $data = array(
             'transfert' => $this->TransfertDao->findById("transfert", $idTransfert),
             'transferts' => $this->DetailTransfertDao->findAllByIdTransfert($idTransfert),
+            'retours' => unserialize($this->session->userdata('sousRetours')),
             'exception' => ''
         );
         
-        var_dump($data);
+//        var_dump(unserialize($this->session->userdata('sousRetours')));
         
         $this->load->view("flux_materiels/retour_materiel/detailTransfert" , $data);
     }

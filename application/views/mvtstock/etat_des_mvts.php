@@ -12,144 +12,20 @@ $this->load->view('templates/header');
 <body class="nav-md">
     <div class="container body">
         <div class="main_container">
-            <div class="col-md-3 left_col">
-                <div class="left_col scroll-view">
-                    <!--Logo-->
-                    <?php $this->load->view('templates/logo'); ?>
-                    <!--Logo-->
-                    <div class="clearfix"></div>
-
-                    <!-- menu profile quick info -->
-                    <div class="profile clearfix">
-                        <div class="profile_pic">
-                            <!--<img src="<?php echo base_url() ?>/assets/images/img.jpg" alt="..." class="img-circle profile_img">-->
-                        </div>
-                        <div class="profile_info">
-                            <span>Bienvenue,</span>
-                            <h2><?php echo $this->session->userdata("nom") . " " . $this->session->userdata("prenom"); ?></h2>
-                        </div>
-                    </div>
-                    <!-- /menu profile quick info -->
-
-                    <br />
-
-                    <!-- sidebar menu -->
-                    <?php $this->load->view("templates/sidebarmenufooter"); ?>
-                    <!-- /sidebar menu -->
-
-                    <!-- /menu footer buttons -->
-
-                    <!-- /menu footer buttons -->
-                </div>
-            </div>
+            <?php $this->load->view('templates/bienvenue_left'); ?>
 
             <!-- top navigation -->
-            <div class="top_nav">
-                <div class="nav_menu">
-                    <nav>
-                        <div class="nav toggle">
-                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
-                        </div>
-
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="">
-                                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <!--<img src="<?php echo base_url(); ?>/assets/images/img.jpg" alt="">-->
-                                    <?php echo $this->session->userdata("prenom"); ?>
-                                    <span class=" fa fa-angle-down"></span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                    <li><a href="javascript:;"> Profil </a></li>
-                                    <!--                                    <li>
-                                                                            <a href="javascript:;">
-                                                                                <span class="badge bg-red pull-right">50%</span>
-                                                                                <span>Settings</span>
-                                                                            </a>
-                                                                        </li>
-                                                                        <li><a href="javascript:;">Help</a></li>-->
-                                    <li><a href="<?php echo base_url('index.php/accesComptesController/logout') ?>"><i class="fa fa-sign-out pull-right"></i> Déconnexion</a></li>
-                                </ul>
-                            </li>
-
-                            <li role="presentation" class="dropdown">
-                                <!--                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                                                    <i class="fa fa-envelope-o"></i>
-                                                                    <span class="badge bg-green">6</span>
-                                                                </a>-->
-                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="<?php echo base_url('assets') ?>/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="<?php echo base_url('assets') ?>/images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <div class="text-center">
-                                            <a>
-                                                <strong>See All Alerts</strong>
-                                                <i class="fa fa-angle-right"></i>
-                                            </a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
+            <?php $this->load->view('templates/top_navigation'); ?>
             <!-- /top navigation -->
 
             <!-- page content -->
             <div class="right_col" role="main">
-
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
 
                         <!--<div class="title_right">-->
-                        <div class="text-center">
-                            <h3>Etat des Mouvements des Stocks</h3>
+                        <div class="text-left">
+                            <h3>Etat des mouvements des stocks</h3>
                         </div>
                         <!--</div>-->
                         <!--</div>-->
@@ -158,25 +34,15 @@ $this->load->view('templates/header');
 
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
+
                         <div class="x_panel">
-                            <div class="form-group">
+                            <div class="form-inline">
                                 <form action="<?php echo base_url('index.php/etatDesMvtsStocksController/etat') ?>" method="post">
-                                    
-                                    <div class="col-md-1 col-sm-1 col-xs-12">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Du: </label>
+                                    <div class="input-prepend input-group">
+                                        <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                                        <input type="text" style="width: 400px" name="entre" id="reservation" class="form-control">
                                     </div>
-                                    <div class="col-md-4 col-sm-4 col-xs-12">
-                                        <input type="date" name="du"  class="form-control" placeholder="Default Input">
-                                    </div>
-                                    <div class="col-md-1 col-sm-1 col-xs-12">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Jusqu'à:</label>
-                                    </div>
-                                    <div class="col-md-4 col-sm-4 col-xs-12">
-                                        <input type="date" name="jusqua" class="form-control" placeholder="Default Input">
-                                    </div>
-
                                     <input class="btn btn-default" type="submit" value="voir etats">
-
                                 </form>
                             </div>
                         </div>
@@ -201,13 +67,13 @@ $this->load->view('templates/header');
                                         <th>
                                           <!--<div class="icheckbox_flat-green" style="position: relative;"><input type="checkbox" id="check-all" class="flat" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>-->
                                         </th>
-                                        <th class="column-title">Référence </th>
-                                        <th class="column-title">Matériel </th>
-                                        <th class="column-title">Quantité Initiale </th>
-                                        <th class="column-title">Entrée</th>
-                                        <th class="column-title">Sortie</th>
-                                        <th class="column-title">Quantité Finale </th>
-                                        <th class="column-title">Unité </th>
+                                        <th class="column-title text-left">Référence </th>
+                                        <th class="column-title text-left">Matériel </th>
+                                        <th class="column-title text-right">Quantité initiale </th>
+                                        <th class="column-title text-right">Entrée</th>
+                                        <th class="column-title text-right">Sortie</th>
+                                        <th class="column-title text-right">Quantité finale </th>
+                                        <th class="column-title text-left">Unité </th>
                                     </tr>
                                 </thead>
 
@@ -217,13 +83,13 @@ $this->load->view('templates/header');
                                             <td class="a-center ">
                                           <!--<div class="icheckbox_flat-green" style="position: relative;"><input type="checkbox" class="flat" name="table_records" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>-->
                                             </td>
-                                            <td class=" "><?php echo $etats[$i]->getReference(); ?></td>
-                                            <td class=" "><?php echo $etats[$i]->getMateriel(); ?></td>
-                                            <td class=" "><?php echo $etats[$i]->getQuantiteInitiale(); ?> </td>
-                                            <td class=" "><?php echo $etats[$i]->getEntree(); ?></td>
-                                            <td class=" "><?php echo $etats[$i]->getSortie(); ?></td>
-                                            <td class=" "><?php echo $etats[$i]->getQuantiteFinale(); ?></td>
-                                            <td class=" "><?php echo $etats[$i]->getUnite(); ?></td>
+                                            <td class="text-left "><?php echo $etats[$i]->getReference(); ?></td>
+                                            <td class="text-left "><?php echo $etats[$i]->getMateriel(); ?></td>
+                                            <td class="text-right "><?php echo $etats[$i]->getQuantiteInitiale(); ?> </td>
+                                            <td class="text-right "><?php echo $etats[$i]->getEntree(); ?></td>
+                                            <td class="text-right "><?php echo $etats[$i]->getSortie(); ?></td>
+                                            <td class="text-right "><?php echo $etats[$i]->getQuantiteFinale(); ?></td>
+                                            <td class="text-left "><?php echo $etats[$i]->getUnite(); ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
@@ -232,9 +98,8 @@ $this->load->view('templates/header');
                             <form action="<?php echo base_url('index.php/etatDesMvtsStocksController/exporterExcel'); ?>" method="post">
                                 <input type="hidden" name="du" value="<?php echo $du; ?>">
                                 <input type="hidden" name="jusqua" value="<?php echo $jusqua; ?>">
-                                <input type="submit" class="btn btn-primary" value="export excel"> 
+                                <button type="submit" class="btn btn-success"> <span class="fa fa-file-excel-o"> télécharger </span></button>
                             </form>
-
                         </div>
                     </div>
                 </div>
@@ -244,13 +109,39 @@ $this->load->view('templates/header');
 
             <?php $this->load->view('templates/footer'); ?>
 
+            <!-- bootstrap-daterangepicker -->
+            <script src="<?php echo base_url("assets"); ?>/vendors/moment/min/moment.min.js"></script>
+            <script src="<?php echo base_url("assets"); ?>/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+
             <script>
                 $(document).ready(function () {
+                    $("#entre").change(function () {
+                        console.log($("#entre").val());
+                    });
+
                     if ($("#exception").val() != "") {
                         alert($('#exception').val());
                     }
+
+                    var du = (new Date());
+                    du.setMonth(du.getMonth() - 3);
+
+                    $('input[name="entre"]').daterangepicker(
+                            {
+                                locale: {
+                                    format: 'DD-MM-YYYY'
+                                },
+                                startDate: du,
+                                endDate: new Date()
+                            },
+                            function (start, end, label) {
+//                                alert("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                            });
+
                 });
             </script>
+
 
             </body>
 

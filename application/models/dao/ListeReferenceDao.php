@@ -30,4 +30,12 @@ class ListeReferenceDao extends BaseService {
             throw $ex;
         }
     }
+    
+    function findByIdDetailTransfert($id) {
+        $conditions_array=array(
+            'id_detail_transfert' => $id
+        );
+        
+        return parent::findWhereAndEquals('listes_references', $conditions_array);
+    }
 }

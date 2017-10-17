@@ -49,44 +49,7 @@ $sousCommande = unserialize($this->session->userdata("sousMvt"));
 <body class="nav-md">
     <div class="container body">
         <div class="main_container">
-            <div class="col-md-3 left_col">
-                <div class="left_col scroll-view">
-                    <!--Logo-->
-                    <?php $this->load->view('templates/logo'); ?>
-                    <!--Logo-->
-
-                    <div class="clearfix"></div>
-
-                    <!-- menu profile quick info -->
-                    <div class="profile clearfix">
-                        <div class="profile_pic">
-                            <!--<img src="<?php echo base_url() ?>/assets/images/img.jpg" alt="..." class="img-circle profile_img">-->
-                        </div>
-                        <div class="profile_info">
-                            <span>Bienvenue,</span>
-                            <h2><?php echo $this->session->userdata("nom") . " " . $this->session->userdata("prenom"); ?></h2>
-                        </div>
-                    </div>
-                    <!-- /menu profile quick info -->
-
-                    <br />
-
-                    <!-- sidebar menu -->
-                    <?php $this->load->view("templates/sidebarmenufooter"); ?>
-                    <!-- /sidebar menu -->
-
-                    <!-- /menu footer buttons -->
-
-                    <!-- /menu footer buttons -->
-                    <!-- sidebar menu -->
-
-                    <!-- /sidebar menu -->
-
-                    <!-- /menu footer buttons -->
-
-                    <!-- /menu footer buttons -->
-                </div>
-            </div>
+            <?php $this->load->view('templates/bienvenue_left'); ?>
 
             <!-- top navigation -->
             <div class="top_nav">
@@ -203,7 +166,7 @@ $sousCommande = unserialize($this->session->userdata("sousMvt"));
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="x_panel">
                             <div class="x_title">
-                                <h2> Sortie <small><?php echo $indiceSortie + 1; ?> </small></h2>
+                                <h2> Sortie </h2>
                                 <ul class="nav navbar-right panel_toolbox">
                                     <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                     </li>
@@ -224,7 +187,7 @@ $sousCommande = unserialize($this->session->userdata("sousMvt"));
                             <div class="x_content">
                                 <br>
                                 <form id="demo-form2" data-parsley-validate="" class="form-horizontal form-label-left" novalidate="" action="<?php echo base_url("index.php/sortieStockController/modificationSousSortie"); ?>" method="post">
-
+                                    <input type="hidden" value="<?php echo $indiceSortie; ?>" name="indiceSousSortie">
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Matériel 
                                         </label>
@@ -232,14 +195,30 @@ $sousCommande = unserialize($this->session->userdata("sousMvt"));
                                             <input type="text" id="first-name" disabled="" value="<?php echo $sousSortie->getMateriel(); ?>" required="required" class="form-control col-md-7 col-xs-12">
                                         </div>
                                     </div>
+                                    
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Quantité 
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Quantité: <span class="required"></span>
                                         </label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="text" id="last-name" value="<?php echo $sousSortie->getQuantite(); ?>" name="quantite" required="required" class="form-control col-md-7 col-xs-12">
+
+                                        <div class="col-md-6 col-sm-6 col-xs-6">
+                                            <input type="text" name="quantite" value="<?php echo $sousSortie->getQuantite(); ?>" class="form-control" id="materiel" placeholder="">
+                                            <!--<input type="hidden" name="idMateriel" class="form-control" id="idMateriel" name="idMateriel" readonly="readonly" placeholder="">-->
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn btn-info">...</button> 
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    
+<!--                                    <div class="form-group">
+                                        <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Quantité 
+                                        </label>
+                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModalDetenteur">...</button>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" id="last-name" value="<?php // echo $sousSortie->getQuantite(); ?>" name="quantite" required="required" class="form-control col-md-7 col-xs-12">
+                                            
+                                        </div>
+                                    </div>-->
+<!--                                    <div class="form-group">
                                         <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Porte</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <input id="middle-name" class="form-control col-md-7 col-xs-12" value="<?php echo $sousSortie->getPorte(); ?>" type="text" name="porte">
@@ -261,7 +240,7 @@ $sousCommande = unserialize($this->session->userdata("sousMvt"));
                                             <input type="hidden" name="dateValue" value="<?php echo $dateValue; ?>">
                                             <input type="hidden" name="commentaire" value="<?php echo $commentaire; ?>">
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="ln_solid"></div>
                                     <div class="form-group">
                                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">

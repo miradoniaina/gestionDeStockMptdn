@@ -12,7 +12,9 @@
  * @author MIRADO
  */
 class ListeMaterielController extends My_Controller {
-
+    private $sizeTable = 3;
+    private $sizePagination = 4;
+    
     //put your code here
     function __construct() {
         parent::__construct();
@@ -23,14 +25,49 @@ class ListeMaterielController extends My_Controller {
     function index() {
         $data = array(
             'exception' => '',
-            'materiels' => $this->MaterielDao->findAllMateriel()
+            'page' => 1,
+            'materiels' => $this->MaterielDao->findAllMaterielPage($this->sizeTable,1),
+            'pagination' => $this->MaterielDao->getPaginationMateriel($this->sizePagination, $this->sizeTable, 1)
         );
 
-        var_dump($data);
-
+//        var_dump($data['pagination']);
+        
         $this->load->view("crud/liste_materiel", $data);
     }
 
+    function page($page){
+        $data = array(
+            'exception' => '',
+            'pagination' => $this->MaterielDao->getPaginationMateriel($this->sizePagination, $this->sizeTable, intval($page)),
+            'page' => intval($page),
+            'materiels' => $this->MaterielDao->findAllMaterielPage($this->sizeTable,$page)
+        );
+        $this->load->view("crud/liste_materiel", $data);
+    }
+    
+    function nextPage($last){
+        $data = array(
+            'exception' => '',
+            'pagination' => $this->MaterielDao->getPaginationMateriel($this->sizePagination, $this->sizeTable, intval($last)),
+            'page' => intval($last),
+            'materiels' => $this->MaterielDao->findAllMaterielPage($this->sizeTable,$last)
+        );
+
+        $this->load->view("crud/liste_materiel", $data);
+    }
+    
+    function previousPage($first){
+        $pagination = $this->MaterielDao->getPaginationMateriel($this->sizePagination, $this->sizeTable, intval($first) - $this->sizePagination );
+        
+        $data = array(
+            'exception' => '',
+            'pagination' => $pagination,
+            'page' => $first - 1,
+            'materiels' => $this->MaterielDao->findAllMaterielPage($this->sizeTable,intval($first - 1))
+        );
+        $this->load->view("crud/liste_materiel", $data);
+    }
+    
     function ficheMateriel($indice) {
         $data = array(
             'exception' => '',
@@ -40,7 +77,7 @@ class ListeMaterielController extends My_Controller {
 
         $this->load->view('crud/fiche_materiel', $data);
     }
-
+    
     public function supprimer($idmateriel) {
         try {
 
@@ -61,5 +98,4 @@ class ListeMaterielController extends My_Controller {
             $this->load->view("crud/liste_materiel", $data);
         }
     }
-
 }

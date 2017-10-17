@@ -39,9 +39,9 @@
 *   206     FNC1            FNC1
 *******************************************************************************/
 
-require('tfpdf/tfpdf.php');
+require('fpdf181/fpdf.php');
 
-class PDF_Code128 extends tFPDF {
+class PDF_Code128 extends FPDF {
 
 protected $T128;                                         // Tableau des codes 128
 protected $ABCset = "";                                  // jeu des caract�res �ligibles au C128

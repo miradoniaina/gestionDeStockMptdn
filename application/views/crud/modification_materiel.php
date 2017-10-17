@@ -2,7 +2,6 @@
 $this->load->view('templates/header');
 ?>
 
-<link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/datetimepicker-master/'); ?>/jquery.datetimepicker.css"/>
 
 <title>Flux Matériels</title>
 </head>
@@ -10,49 +9,12 @@ $this->load->view('templates/header');
 <!-- Trigger the modal with a button -->
 <!-- Modal -->
 
-<!--<input id="exception" type="hidden" value="<?php // echo $exception;     ?>">-->
+<!--<input id="exception" type="hidden" value="<?php // echo $exception;      ?>">-->
 
 <body class="nav-md">
     <div class="container body">
         <div class="main_container">
-            <div class="col-md-3 left_col">
-                <div class="left_col scroll-view">
-                    <!--Logo-->
-                    <?php $this->load->view('templates/logo'); ?>
-                    <!--Logo-->
-
-                    <div class="clearfix"></div>
-
-                    <!-- menu profile quick info -->
-                    <div class="profile clearfix">
-                        <div class="profile_pic">
-                            <!--<img src="<?php // echo base_url() ?>/assets/images/img.jpg" alt="..." class="img-circle profile_img">-->
-                        </div>
-                        <div class="profile_info">
-                            <span>Bienvenue,</span>
-                            <h2><?php echo $this->session->userdata("nom") . " " . $this->session->userdata("prenom"); ?></h2>
-                        </div>
-                    </div>
-                    <!-- /menu profile quick info -->
-
-                    <br />
-
-                    <!-- sidebar menu -->
-                    <?php $this->load->view("templates/sidebarmenufooter"); ?>
-                    <!-- /sidebar menu -->
-
-                    <!-- /menu footer buttons -->
-
-                    <!-- /menu footer buttons -->
-                    <!-- sidebar menu -->
-
-                    <!-- /sidebar menu -->
-
-                    <!-- /menu footer buttons -->
-
-                    <!-- /menu footer buttons -->
-                </div>
-            </div>
+            <?php $this->load->view('templates/bienvenue_left'); ?>
 
             <!-- top navigation -->
             <div class="top_nav">
@@ -65,7 +27,7 @@ $this->load->view('templates/header');
                         <ul class="nav navbar-nav navbar-right">
                             <li class="">
                                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <!--<img src="<?php // echo base_url();                                    ?>/assets/images/img.jpg" alt="">-->
+                                    <!--<img src="<?php // echo base_url();                                     ?>/assets/images/img.jpg" alt="">-->
                                     <?php echo $this->session->userdata("prenom"); ?>
                                     <span class=" fa fa-angle-down"></span>
                                 </a>
@@ -90,7 +52,7 @@ $this->load->view('templates/header');
                                 <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
                                     <li>
                                         <a>
-                                            <!--<span class="image"><img src="<?php // echo base_url('assets')                                    ?>/images/img.jpg" alt="Profile Image" /></span>-->
+                                            <!--<span class="image"><img src="<?php // echo base_url('assets')                                     ?>/images/img.jpg" alt="Profile Image" /></span>-->
                                             <span>
                                                 <span>John Smith</span>
                                                 <span class="time">3 mins ago</span>
@@ -102,7 +64,7 @@ $this->load->view('templates/header');
                                     </li>
                                     <li>
                                         <a>
-                                            <!--<span class="image"><img src="<?php // echo base_url('assets')                                    ?>/images/img.jpg" alt="Profile Image" /></span>-->
+                                            <!--<span class="image"><img src="<?php // echo base_url('assets')                                     ?>/images/img.jpg" alt="Profile Image" /></span>-->
                                             <span>
                                                 <span>John Smith</span>
                                                 <span class="time">3 mins ago</span>
@@ -156,13 +118,23 @@ $this->load->view('templates/header');
             <div class="right_col" role="main">
 
                 <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-5">
-                        <div class="page-title">
-                            <div class="text-center">
-                                <h1>Modification Matériel : <?php echo $materiel->id_materiel; ?></h1>
-                            </div>
+                    <div class="">
+                        <div class="row">
+                            <h1 style="margin-left: 2%">Modification Matériel : <?php echo $materiel->designation; ?></h1>
                         </div>
+<!--                        <div class="title_right">
+                                                        <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control" placeholder="Search for...">
+                                                                <span class="input-group-btn">
+                                                                    <button class="btn btn-default" type="button">Go!</button>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                        </div>-->
+
                     </div>
+                    <div class="clearfix"></div>
                 </div>
 
                 <div class="row">
@@ -194,9 +166,9 @@ $this->load->view('templates/header');
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">Désignation <span class="required">*</span>
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input id="name" class="form-control col-md-7 col-xs-12" data-validate-length-range="6" data-validate-words="1" value="<?php echo $materiel->designation; ?>" name="designation" placeholder="ex Imprimante Laser" required="required" type="text">
+                                            <input id="name" class="form-control col-md-7 col-xs-12" value="<?php echo $materiel->designation; ?>" name="designation" placeholder="ex Imprimante Laser" required="required" type="text">
                                             <input type="hidden" value="<?php echo $materiel->id_materiel; ?>" name="id_materiel">
-                                                
+
                                         </div>
                                     </div>
 
@@ -236,7 +208,7 @@ $this->load->view('templates/header');
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Image <span class="required">*</span>
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <input type="file" id="email" name="image" required="required"  class="form-control col-md-7 col-xs-12">
+                                            <input type="file" id="email" name="image" value="c://Documents/exo1.log" required="required"  class="form-control col-md-7 col-xs-12">
                                         </div>
                                     </div>
 
@@ -252,7 +224,7 @@ $this->load->view('templates/header');
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">Détails du matériel <span class="required">*</span>
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <textarea id="textarea" value="<?php echo $materiel->details_materiel; ?>" required="required"  name="details_materiel" class="form-control col-md-7 col-xs-12" ><?php echo $materiel->details_materiel; ?> </textarea>  
+                                            <textarea id="textarea" data-validate-length-range="6" data-validate-words="1" value="<?php echo $materiel->details_materiel; ?>" required="required"  name="details_materiel" class="form-control col-md-7 col-xs-12" ><?php echo $materiel->details_materiel; ?> </textarea>  
                                         </div>
                                     </div>
                                     <div class="ln_solid"></div>
@@ -269,7 +241,7 @@ $this->load->view('templates/header');
                 </div>
             </div>
             <!-- /page content -->
-
+            <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/datetimepicker-master/'); ?>/jquery.datetimepicker.css"/>
             <?php $this->load->view('templates/footer'); ?>
 
             <script src="<?php echo base_url("assets"); ?>/vendors/validator/validator.js"></script>

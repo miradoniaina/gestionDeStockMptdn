@@ -18,10 +18,10 @@ class SortieUsageInterneDao extends BaseService{
         $this->load->model("modele/SortieUsageInterneModele");
     }
     
-    function insertUsageInterne($sortie){
+    function insertUsageInterne($idPorte){
         $sql = "INSERT INTO sortie_usage_interne(
-             id_materiel, id_mvt_stock, id_porte)
-    VALUES ( " . $sortie->getIdMateriel() . ", currval('mvt_de_stock_id_mvt_stock_seq') ," . $sortie->getIdPorte() .")";
+            id_sortie_interne, id_mvt_stock, id_porte)
+    VALUES ( nextval('sortie_usage_interne_id_sortie_interne_seq'), currval('mvt_stock_id_mvt_stock_seq') ," . $idPorte .")";
         
         $this->db->query($sql);
     }

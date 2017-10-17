@@ -74,12 +74,12 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
-	'dsn'	=> 'pgsql:host=localhost;port=5432;dbname=gestion_stock_flux_materiel',
+//	'dsn'	=> 'pgsql:host=localhost;port=5432;dbname=gestion_stock_flux_materiel',
 	'hostname' => 'localhost',
 	'username' => 'postgres',
 	'password' => 'itu',
-	'database' => 'user_php',
-	'dbdriver' => 'pdo',
+	'database' => 'gestion_stock_flux_materiel',
+	'dbdriver' => 'postgre',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),

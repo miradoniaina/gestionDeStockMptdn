@@ -15,6 +15,7 @@ class MvtStockServices extends BaseService {
 
     function __construct() {
         parent::__construct();
+        $this->load->model("dao/SousMvtStockDao");
         $this->load->model("dao/MvtStockDao");
         $this->load->model("dao/CodeBarreDao");
         $this->load->model("dao/SortieDetenteurDao");
@@ -22,8 +23,9 @@ class MvtStockServices extends BaseService {
 
         $this->load->model("dao/EtatDesMouvementsStocksDao");
         $this->load->model("dao/ReferenceSortieDao");
+        $this->load->model("dao/InventaireDao");
 
-        $this->load->library('code128/PDF_Code128');
+        $this->load->model("modele/MvtStockModele");
     }
 
 //    enregistrerEntree
@@ -34,27 +36,26 @@ class MvtStockServices extends BaseService {
     }
 
     function genererPdfCodeBarres($to_print, $dateMvt) {
+        $this->load->library('code128/PDF_Code128');
+
         define('FPDF_FONTPATH', $this->config->item('fonts_path'));
 
         $pdf = new PDF_Code128();
-        $pdf->SetAutoPageBreak(true, 40);
         $pdf->AddPage();
 
-        $pdf->AddFont('DejaVu', '', 'DejaVuSansCondensed.ttf', true);
-        $pdf->SetFont('DejaVu', '', 28);
-
-        $pdf->Cell(180, 10, "Code-Barres entrées du " . $dateMvt, 0, 2, 'C');
+        $pdf->SetFont('Times', 'B', 20);
+        $pdf->Cell(180, 10, "Code-Barres des entrees du " . $dateMvt, 0, 2, 'C');
 
         $y = 50;
 
         for ($i = 0; $i < count($to_print); $i++) {
 
-            $pdf->SetFont('DejaVu', '', 18);
+            $pdf->SetFont('Times', '', 18);
 
             $pdf->SetXY(30, $y - 10);
-            $pdf->Write(5, $to_print[$i]->getQuantite() . ' * ' . $to_print[$i]->getMateriel());
+            $pdf->Write(5, $to_print[$i]->getQuantite() . '  ' . $to_print[$i]->getMateriel());
 
-            $pdf->SetFont('DejaVu', '', 10);
+            $pdf->SetFont('Times', '', 10);
 
             for ($j = 0; $j < count($to_print[$i]->getCodebarres()); $j++) {
 
@@ -65,7 +66,6 @@ class MvtStockServices extends BaseService {
                 $pdf->Write(5, '' . $code . '');
                 $y+=35;
 
-
                 if ($y >= 250) {
                     $pdf->AddPage();
                     $y = 50;
@@ -75,34 +75,24 @@ class MvtStockServices extends BaseService {
                 $y+=25;
             }
         }
-        $pdf->Output();
+
+        $pdf->Output('F', false);
     }
 
-    function enregistrerListeEntree($entrees, $dateMvt, $commentaire) {
-        $idEntree = array();
-
+    function enregistrerListeEntree($entrees, $dateMvt, $commentaire, $idPersonnel) {
         $this->db->trans_start(FALSE);
+        $mvtStock = new MvtStockModele();
+        $mvtStock->setDateMvt($dateMvt);
+        $mvtStock->setCommentaire($commentaire);
+        $mvtStock->setIdPersonnel($idPersonnel);
+        $mvtStock->setType("entrée");
+
+        $this->MvtStockDao->insert($mvtStock);
 
         for ($i = 0; $i < count($entrees); $i++) {
-            $entrees[$i]->setDateMvt($dateMvt);
-            $entrees[$i]->setCommentaire($commentaire);
-            $this->MvtStockDao->insertMvt($entrees[$i]);
-
-            array_push($idEntree, $this->db->insert_id());
-
+            $this->SousMvtStockDao->insertMvt($entrees[$i]);
             $this->enregistrerCodeBarre($entrees[$i]);
         }
-
-        $to_print_pdf = array();
-
-        for ($i = 0; $i < count($idEntree); $i++) {
-            array_push($to_print_pdf, $this->MvtStockDao->findByIdWithCodeBarre($idEntree[$i]));
-        }
-
-        $dateEntree = $entrees[0]->getDateMvt()->format("d-m-Y");
-
-        $this->genererPdfCodeBarres($to_print_pdf, $dateEntree);
-
         $this->db->trans_complete();
     }
 
@@ -113,24 +103,33 @@ class MvtStockServices extends BaseService {
 //    enregistrerEntree
 //    enregistrerSortie
 
-    function enregistrerListeSorties($sorties, $dateMvt, $commentaire) {
-        $this->db->trans_start(FALSE);
+    function enregistrerListeSorties($sorties, $dateMvt, $commentaire, $idPersonnel) {
+        try {
+            $this->db->trans_start(FALSE);
 
-        for ($i = 0; $i < count($sorties); $i++) {
-            $sorties[$i]->setDateMvt($dateMvt);
+            $mvtStock = new MvtStockModele();
+            $mvtStock->setIdPersonnel($idPersonnel);
+            $mvtStock->setDateMvt($dateMvt);
+            $mvtStock->setCommentaire($commentaire);
+            $mvtStock->setType("sortie");
 
-            $sorties[$i]->setCommentaire($commentaire);
-            $this->MvtStockDao->insertMvt($sorties[$i]);
+            $this->MvtStockDao->insert($mvtStock);
+
+            for ($i = 0; $i < count($sorties); $i++) {
+                $this->checkStockEpuise($sorties[$i]);
+                $this->SousMvtStockDao->insertMvt($sorties[$i]);
+            }
+            $this->db->trans_complete();
+        } catch (Exception $ex) {
+            throw $ex;
         }
-        $this->db->trans_complete();
     }
 
     function checkStockEpuise($sortie) {
-
         error_reporting(1);
         try {
-            $inventaire = $this->findByIdView('inventaire_view', 'id_materiel', 1);
-            if (($inventaire == null) || ($sortie->getQuantite() > $inventaire->quantite_restant)) {
+            $inventaire = $this->InventaireDao->findAllInventaireByIdMateriel(new DateTime(), $sortie->getIdMateriel())[0];
+            if (($inventaire == null) || ($sortie->getQuantite() > $inventaire->getQuantiteStock())) {
                 throw new Exception("La quantité en stock du matériel " . $sortie->getMateriel() . " n'est pas assez!");
             }
         } catch (Exception $ex) {
@@ -147,51 +146,47 @@ class MvtStockServices extends BaseService {
         }
     }
 
-    function enregistrerListeSortiesInterne($sorties, $dateMvt, $numero_porte, $detenteurs, $id_detenteurs, $commentaire) {
-        
+    function enregistrerListeSortiesInterne($sorties, $dateMvt, $numero_porte, $id_detenteurs, $commentaire, $idPersonnel) {
 
         try {
             $this->db->trans_start(FALSE);
-            
+
             $conditionsPorte = array(
                 'numero' => $numero_porte
             );
 
             $porte = $this->BaseService->findWhereAndEquals('porte', $conditionsPorte);
 
-            if (count($porte) == 0 && $this->input->post("porte") != "") {
-                throw new Exception("La porte insérée n'éxiste pas");
+            if (count($porte) == 0) {
+                throw new Exception("Veuiller insérée une porte valide");
             }
 
-            for ($i = 0; $i < count($sorties); $i++) {
-                $sorties[$i]->setDateMvt($dateMvt);
+            $mvtStock = new MvtStockModele();
 
-                $sorties[$i]->setCommentaire($commentaire);
+            $mvtStock->setType("sortie");
+            $mvtStock->setIdPersonnel($idPersonnel);
+            $mvtStock->setCommentaire($commentaire);
+            $mvtStock->setDateMvt($dateMvt);
 
-                $sorties[$i]->setIdDetenteurs($id_detenteurs);
+            $this->MvtStockDao->insert($mvtStock);
 
-                $sorties[$i]->setDetenteurs($detenteurs);
+            if (count($porte) != 0) {
+                $this->SortieUsageInterneDao->insertUsageInterne($porte[0]->id_porte);
+            }
 
-                $sorties[$i]->setPorte($numero_porte);
 
-                if (count($porte) != 0) {
-                    $sorties[$i]->setIdPorte($porte[0]->id_porte);
+                for ($i = 0; $i < count($sorties); $i++) {
+
+                    $this->checkStockEpuise($sorties[$i]);
+
+                    $this->SousMvtStockDao->insertMvt($sorties[$i]);
+
+                    $this->saveReferences($sorties[$i]);
                 }
 
-                $this->checkStockEpuise($sorties[$i]);
+            $this->SortieDetenteurDao->insertDetenteurs($id_detenteurs);
 
-                var_dump($sorties[$i]);
-
-                $this->MvtStockDao->insertMvt($sorties[$i]);
-
-                $this->SortieUsageInterneDao->insertUsageInterne($sorties[$i]);
-                
-                $this->saveReferences($sorties[$i]);
-                
-                $this->SortieDetenteurDao->insertDetenteurs($sorties[$i]);
-                
-                $this->db->trans_complete();
-            }
+            $this->db->trans_complete();
         } catch (Exception $ex) {
             throw $ex;
         }

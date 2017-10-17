@@ -20,6 +20,9 @@ class TransfertMaterielService extends BaseService {
         $this->load->model("dao/RetourDao");
         $this->load->model("dao/DetailTransfertDao");
         $this->load->model("dao/ListeReferenceDao");
+        $this->load->model("dao/ListeReferenceRetourDao");
+        $this->load->model("dao/SousRetoursDao");
+        $this->load->model("dao/ReferenceSortieDao");
     }
 
     function insertListeReferences($listeReferences) {
@@ -28,65 +31,120 @@ class TransfertMaterielService extends BaseService {
         }
     }
 
-    public function enregistrerTransferts($detailtransferts, $date, $commentaire) {
-        
+    function controlleReferenceInsidePorte($idPorte, $references) {
+        try {
+            for ($i = 0; $i < count($references); $i++) {
+                if ($this->ReferenceSortieDao->compareReferenceByIdPorte($idPorte, $references[$i]->getReference()) === 0) {
+                    throw new Exception("la reference " . $references[$i]->getReference() . " n'appartient pas à la porte désigné");
+                }
+            }
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    public function enregistrerTransferts($detailtransferts, $transfert, $type, $recuperation, $porteSource, $porteDest, $date, $commentaire) {
+
         try {
             $this->db->trans_start(FALSE);
-            
-                $transfert = new TransfertModele();
-                $transfert->setDateTransfert($date);
-                $transfert->setCommentaire($commentaire);
-                
-              $this->TransfertDao->saveTransfert($transfert);
-              
-            for ($i = 0; $i < count($detailtransferts); $i++) {
 
-                $this->DetailTransfertDao->saveDetailTransfert($detailtransferts[$i]);
+            $mytransfert = new TransfertModele();
+            $mytransfert->setTransfert($transfert);
+            $mytransfert->setType($type);
+            $mytransfert->setDateRecuperation($recuperation);
+
+            if ($porteSource != "null") {
+                $conditionsPorteSource = array(
+                    'numero' => $porteSource
+                );
+
+                $porteSource = $this->findWhereAndEquals('porte', $conditionsPorteSource);
+
+
+                if (count($porteSource) != 0) {
+                    $mytransfert->setIdPorteSource($porteSource[0]->id_porte);
+                    for($i = 0; $i < count($detailtransferts); $i++){
+                    $listeReferences = $detailtransferts[$i]->getListeReference();
+
+                    $this->controlleReferenceInsidePorte($porteSource[0]->id_porte, $listeReferences);
+                }
+                } else {
+                    throw new Exception("la porte source insérée n'éxiste pas");
+                }
+                
+                
+            }
+
+            if ($porteDest != "null") {
+                $conditionsPorteDest = array(
+                    'numero' => $porteDest
+                );
+
+                $porteDest = $this->findWhereAndEquals('porte', $conditionsPorteDest);
+
+                if (count($porteDest) != 0) {
+                    $mytransfert->setIdPorteDest($porteDest[0]->id_porte);
+                } else {
+                    throw new Exception("la porte destinataire insérée n'éxiste pas");
+                }
+            }
+
+            $mytransfert->setDateTransfert($date);
+            $mytransfert->setCommentaire($commentaire);
+            $mytransfert->setIdPersonnel($this->session->userdata("id_personnel"));
+
+            $this->TransfertDao->saveTransfert($mytransfert);
+
+            for ($i = 0; $i < count($detailtransferts); $i++) {
                 $listeReferences = $detailtransferts[$i]->getListeReference();
+                $this->DetailTransfertDao->saveDetailTransfert($detailtransferts[$i]);
+
                 $this->insertListeReferences($listeReferences);
             }
-              
+
             $this->db->trans_complete();
         } catch (Exception $ex) {
             throw $ex;
         }
     }
-    
-    function getIdDetailTransfert($reference){
+
+    function getIdDetailTransfert($reference) {
         try {
-//            $sql = "INSERT INTO retour_materiel(
-//            id_retour_materiel, id_personnel, date_retour, commentaire)
-//    VALUES (nextval('retour_materiel_id_retour_materiel_seq'), " . $this->session->userdata("id_personnel") . " , '" . $transferModele->getDateTransfert() . "' , '" . $transferModele->getCommentaire() . "')";
-            
             $sql = "INSERT INTO sous_retour(
             id_sous_retour, id_retour_materiel, id_detail_transfert, quantite)
     VALUES (nextval('sous_retour_id_sous_retour_seq'), currval('retour_materiel_id_retour_materiel_seq'), ?, ?)";
 
-            
+
             $this->db->query($sql);
         } catch (Exception $ex) {
             throw $ex;
         }
     }
-    
-    function enregistrerRetoursMatériels($sousRetours, $date, $commentaire){
-        
+
+    function insertListeReferencesRetour($listeReferences) {
+        for ($j = 0; $j < count($listeReferences); $j++) {
+            $this->ListeReferenceRetourDao->saveReferenceRetour($listeReferences[$j]);
+        }
+    }
+
+    function enregistrerRetoursMatériels($sousRetours, $date, $commentaire, $idPersonnel) {
+
         try {
             $this->db->trans_start(FALSE);
-                $transfert = new TransfertModele();
-                $transfert->setDateTransfert($date);
-                $transfert->setCommentaire($commentaire);
-                
-              $this->RetourDao->saveRetour($transfert);
-              
+            $transfert = new TransfertModele();
+            $transfert->setDateTransfert($date);
+            $transfert->setCommentaire($commentaire);
+            $transfert->setIdPersonnel($idPersonnel);
+
+            $this->RetourDao->saveRetour($transfert);
+
             for ($i = 0; $i < count($sousRetours); $i++) {
-                $this->DetailTransfertDao->saveDetailTransfert($detailtransferts[$i]);
-//                $listeReferences = $detailtransferts[$i]->getListeReference();
-//                $this->insertListeReferences($listeReferences);
+                $this->SousRetoursDao->saveSousRetour($sousRetours[$i]);
+                $listeReferences = $sousRetours[$i]->getListeReference();
+                $this->insertListeReferencesRetour($listeReferences);
             }
-              
+
             $this->db->trans_complete();
-            
         } catch (Exception $ex) {
             throw $ex;
         }

@@ -12,7 +12,7 @@
  * @author MIRADO
  */
 class NouveauMaterielController extends My_Controller {
-
+    
     //put your code here
     function __construct() {
         parent::__construct();

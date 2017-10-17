@@ -17,6 +17,22 @@ $.datetimepicker.setLocale('fr');
                     startDate: new Date()
                 });
 
+                $('#dateMvt').datetimepicker({
+                    dayOfWeekStart: 1,²
+                });
+                
+                $('#dateEtatSpline').datetimepicker({
+                    timepicker: false,
+                    format: 'Y',
+//                    step: 5,
+                    
+//                    dayOfWeekStart: 1,
+                    lang: 'fr',
+//                    format: 'Y',
+//                    formatDate: 'Y/m/d H:i',
+                    startDate: new Date()
+                });
+                
                 $('#datetimepickerr').datetimepicker({value: '', step: 10});
                 
                 
@@ -25,6 +41,7 @@ $.datetimepicker.setLocale('fr');
                     lang: 'fr',
                     disabledDates: ['1986/01/08', '1986/01/09', '1986/01/10'],
                     startDate: new Date()
+                    
                 });
                 
                 $('#datetimepickerfst').datetimepicker({value: '', step: 10});
@@ -32,12 +49,10 @@ $.datetimepicker.setLocale('fr');
                 $('.some_class').datetimepicker();
 
                 $('#default_datetimepicker').datetimepicker({
-                    formatTime: 'H:i',
-                    formatDate: 'd.m.Y',
-                    //defaultDate:'8.12.1986', // it's my birthday
-                    defaultDate: '+03.01.1970', // it's my birthday
-                    defaultTime: '10:00',
-                    timepickerScrollbar: false
+                    dayOfWeekStart: 1,
+                    lang: 'fr',
+                    disabledDates: ['1986/01/08', '1986/01/09', '1986/01/10'],
+                    startDate: new Date()
                 });
 
                 $('#datetimepicker10').datetimepicker({
@@ -53,6 +68,7 @@ $.datetimepicker.setLocale('fr');
                     format: 'H:i',
                     step: 5
                 });
+                
                 $('#datetimepicker2').datetimepicker({
                     yearOffset: 222,
                     lang: 'ch',
@@ -60,8 +76,19 @@ $.datetimepicker.setLocale('fr');
                     format: 'd/m/Y',
                     formatDate: 'Y/m/d',
                     minDate: '-1970/01/02', // yesterday is minimum date
-                    maxDate: '+1970/01/02' // and tommorow is maximum date calendar
+                    maxDate: new Date() // and tommorow is maximum date calendar
                 });
+                
+                $('#mydatepickerinventaireflux').datetimepicker({
+//                  dayOfWeekStart: 1,
+                    format: 'd/m/Y H:i',
+                    formatDate: 'd/m/Y H:i',
+                    lang: 'fr',
+//                    disabledDates: ['1986/01/08', '1986/01/09', '1986/01/10'],
+                    startDate: new Date(),
+                    maxDate: new Date()
+                });
+                
                 $('#datetimepicker3').datetimepicker({
                     inline: true
                 });

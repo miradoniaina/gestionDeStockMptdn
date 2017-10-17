@@ -20,15 +20,10 @@ class SousRetoursDao extends BaseService {
     
     function saveSousRetour($detailTransfertModele){
         try {
-//            $sql = "INSERT INTO retour_materiel(
-//            id_retour_materiel, id_personnel, date_retour, commentaire)
-//    VALUES (nextval('retour_materiel_id_retour_materiel_seq'), " . $this->session->userdata("id_personnel") . " , '" . $transferModele->getDateTransfert() . "' , '" . $transferModele->getCommentaire() . "')";
-            
             $sql = "INSERT INTO sous_retour(
             id_sous_retour, id_retour_materiel, id_detail_transfert, quantite)
-    VALUES (nextval('sous_retour_id_sous_retour_seq'), currval('retour_materiel_id_retour_materiel_seq'), ?, ?)";
+    VALUES (nextval('sous_retour_id_sous_retour_seq'), currval('retour_materiel_id_retour_materiel_seq'), " .$detailTransfertModele->getIdDetailTransfert(). ", " .$detailTransfertModele->getQuantite(). ")";
 
-            
             $this->db->query($sql);
         } catch (Exception $ex) {
             throw $ex;

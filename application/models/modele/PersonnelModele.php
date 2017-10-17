@@ -24,6 +24,15 @@ class PersonnelModele extends BaseModele {
     private $detenteur;
     private $poste;
     
+    private $numeroPorte;
+    private $service;
+    private $departement;
+    private $direction;
+    
+    function __construct() {
+        
+    }
+
     function getIdDepartement() {
         return $this->idDepartement;
     }
@@ -102,5 +111,42 @@ class PersonnelModele extends BaseModele {
 
     function setPoste($poste) {
         $this->poste = $poste;
+    }
+    
+    function getNumeroPorte() {
+        return $this->numeroPorte;
+    }
+
+    function setNumeroPorte($numeroPorte) {
+        $this->numeroPorte = $numeroPorte;
+    }
+
+    function getService() {
+        return $this->service;
+    }
+
+    function getDepartement() {
+        return $this->departement;
+    }
+
+    function getDirection() {
+        return $this->direction;
+    }
+
+    function setService($service) {
+        $this->service = $service;
+    }
+
+    function setDepartement($departement1 , $departement2) {
+        
+        if(!empty($departement1)){
+            $this->departement = $departement1;
+            return ;
+        }
+        $this->departement = $departement2;
+    }
+
+    function setDirection($direction) {
+        $this->direction = $direction;
     }
 }

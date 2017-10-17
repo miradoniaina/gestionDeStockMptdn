@@ -19,7 +19,7 @@ class CodeBarreModele extends BaseModele{
     private $refCodeBarre;
     
     function __construct() {
-        
+        parent::__construct();
     }
     
     function getIdMateriel() {

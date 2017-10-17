@@ -24,11 +24,14 @@ date_default_timezone_set('Indian/Antananarivo');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/gestionStockEtFluxMateriels/';
-//$config['base_url'] = 'http://192.168.1.190/gestionStockEtFluxMateriels/';
+
+//$config['base_url'] = 'http://localhost/stockfluxmptdn/';
+//$config['base_url'] = 'http://192.168.36.1/stockfluxmptdn/';
+$config['base_url'] = 'http://192.168.1.3/stockfluxmptdn/';
+//$config['base_url'] = 'http://41.242.97.36/stockfluxmptdn/';
 
 /*
-|--------------------------------------------------------------------------
+|------------------------------------------------------------1--------------
 | Index File
 |--------------------------------------------------------------------------
 |

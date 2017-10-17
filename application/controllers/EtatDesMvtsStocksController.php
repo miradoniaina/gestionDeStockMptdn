@@ -32,8 +32,14 @@ class EtatDesMvtsStocksController extends MY_Controller {
     }
 
     function etat() {
-        $du = date_create($this->input->post("du"));
-        $jusqua = date_create($this->input->post("jusqua"));
+         
+        $exp = explode(' - ', $this->input->post("entre"));
+        
+//        $du = date_create($this->input->post("du"));
+//        $jusqua = date_create($this->input->post("jusqua"));
+        
+        $du = date_create($exp[0]);
+        $jusqua = date_create($exp[1]);
 
         $data = array(
             'du' => $this->input->post("du"),

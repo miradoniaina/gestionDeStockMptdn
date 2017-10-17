@@ -15,26 +15,31 @@ class DetailTransfertModele extends BaseModele {
 
     //put your code here
     private $quantite;
-    private $porteSource;
-    private $porteDest;
-    private $transfert;
-    private $type;
+//    private $qteRestant;
+//    private $porteSource;
+//    private $porteDest;
+//    private $transfert;
+//    private $type;
     private $refMateriel;
     private $materiel;
-    private $dateTransfert;
-    private $dateRecuperation;
-    private $commentaire;
+//    private $dateTransfert;
+//    private $dateRecuperation;
+//    private $commentaire;
     private $listeReference = [];
     private $designationMateriel;
-    private $numeroPorteSource;
-    private $numeroPorteDest;
+//    private $numeroPorteSource;
+//    private $numeroPorteDest;
 
     function __construct() {
         parent::__construct();
         $this->load->model('modele/ReferenceModele');
         $this->load->model('dao/MaterielDao');
+        $this->load->model('dao/ListeReferenceDao');
+        $this->load->model('dao/ListeReferenceRetourDao');
     }
-
+    
+    
+    
     function getQuantite() {
         return $this->quantite;
     }
@@ -114,9 +119,9 @@ class DetailTransfertModele extends BaseModele {
         $this->transfert = $transfert;
     }
 
-    function setType($type) {
-        $this->type = $type;
-    }
+//    function setType($type) {
+//        $this->type = $type;
+//    }
 
     function setRefMateriel($refMateriel) {
         $this->refMateriel = $refMateriel;
@@ -131,10 +136,10 @@ class DetailTransfertModele extends BaseModele {
         return $this->materiel[0]->designation;
     }
 
-    function getMateriel1(){
+    function getMateriel1() {
         return $this->materiel;
     }
-    
+
     function getIdMateriel() {
         if (is_null($this->materiel)) {
             return "";
@@ -143,20 +148,15 @@ class DetailTransfertModele extends BaseModele {
         return $this->materiel[0]->id_materiel;
     }
 
-    function setMateriel($materiel, $transfert) {
+    function setMateriel($materiel) {
         try {
-            if (($transfert == "Loc") || ($this->type == "prets") || ($this->type == "retour prets")) {
-                if (count($materiel) != 1) {
-                    throw new Exception("Ce matériel n'appartient pas au Ministère");
-                }
-            }
             $this->materiel = $materiel;
         } catch (Exception $ex) {
             throw $ex;
         }
     }
-    
-    function setMaterielByRef($ref){
+
+    function setMaterielByRef($ref) {
         try {
             $reference = explode("-", $ref);
             $this->materiel = $this->MaterielDao->findByRef($reference[0]);
@@ -164,11 +164,10 @@ class DetailTransfertModele extends BaseModele {
             throw $ex;
         }
     }
-    
+
     function setMateriel1($materiel) {
         $this->materiel = $materiel;
     }
-    
 
     function getDateTransfert() {
         return $this->dateTransfert->format("d-m-Y H:i:s");
@@ -204,10 +203,85 @@ class DetailTransfertModele extends BaseModele {
     function setListeReference($listeReference) {
         $tab = explode(";", $listeReference);
 
+        try {
+            for ($i = 0; $i < count($tab); $i++) {
+                if (explode("-", $tab[$i])[0] != explode("-", $this->refMateriel)[0]) {
+                    throw new Exception("la référence à la ligne " . ($i + 1) . " ne correspond pas au matériel ");
+                }
+            }
+
+            for ($i = 0; $i < count($tab); $i++) {
+                $ref = new ReferenceModele();
+                $ref->setReference($tab[$i]);
+                array_push($this->listeReference, $ref);
+            }
+        } catch (Exception $ex) {
+            throw $ex;
+        }
+    }
+
+    function getListeReferenceRetour() {
+        return $this->listeReferenceRetour;
+    }
+
+    function controleDejaRetourne($tab, $idDetailTransfert) {
+
+        $retourByIdDetailTransfert = $this->ListeReferenceRetourDao->findAllRetourByIdDetailTransfert($idDetailTransfert);
+
         for ($i = 0; $i < count($tab); $i++) {
-            $ref = new ReferenceModele();
-            $ref->setReference($tab[$i]);
-            array_push($this->listeReference, $ref);
+            for ($j = 0; $j < count($retourByIdDetailTransfert); $j++) {
+                if($tab[$i] === $retourByIdDetailTransfert[$j]->reference) {
+                    throw new Exception("la référence à ligne " . ($i+1) ." à déjà été retourné");
+                }
+            }
+        }
+    }
+
+    function controleListeTousDifferent($referencesTab) {
+        for ($i = 0; $i < count($referencesTab); $i++) {
+            for ($j = $i + 1; $j < count($referencesTab); $j++) {
+                if ($referencesTab[$i] === $referencesTab[$j]) {
+                    throw new Exception("la référence à la ligne " . ($i + 1) . " se répète à la ligne " . ($j + 1));
+                }
+            }
+        }
+    }
+
+    function controleListeReference($liste_reference_detail_transfert, $referencesTab, $idDetailTransfert) {
+
+        for ($i = 0; $i < count($referencesTab); $i++) {
+            $t = count($liste_reference_detail_transfert);
+            for ($j = 0; $j < $t; $j++) {
+
+                if ($referencesTab[$i] === $liste_reference_detail_transfert[$j]->reference) {
+                    break;
+                } else if (($referencesTab[$i] !== $liste_reference_detail_transfert[$j]->reference) && ($j < $t - 1)) {
+                    continue;
+                }
+
+                throw new Exception("la référence \"" . $referencesTab[$i] . "\" ligne " .($i + 1) . " n'est pas valide ");
+            }
+        }
+    }
+
+    function setListeReferenceRetour($listeReferenceRetour, $idDetailTransfert) {
+
+        $tab = explode(";", $listeReferenceRetour);
+
+        try {
+            $liste_reference_detail_transfert = $this->ListeReferenceDao->findByIdDetailTransfert($idDetailTransfert);
+
+            $this->controleListeTousDifferent($tab);
+            $this->controleListeReference($liste_reference_detail_transfert, $tab, $idDetailTransfert);
+            $this->controleDejaRetourne($tab, $idDetailTransfert);
+
+            for ($i = 0; $i < count($tab); $i++) {
+                $ref = new ReferenceModele();
+                $ref->setReference($tab[$i]);
+                array_push($this->listeReference, $ref);
+            }
+        } catch (Exception $ex) {
+            throw $ex;
         }
     }
 
@@ -236,11 +310,11 @@ class DetailTransfertModele extends BaseModele {
     function getDesignationMateriel() {
         return $this->designationMateriel;
     }
-    
+
     function setDesignationMateriel($designationMateriel) {
         $this->designationMateriel = $designationMateriel;
     }
-    
+
     function getNumeroPorteSource() {
         return $this->numeroPorteSource;
     }
@@ -256,4 +330,13 @@ class DetailTransfertModele extends BaseModele {
     function setNumeroPorteDest($numeroPorteDest) {
         $this->numeroPorteDest = $numeroPorteDest;
     }
+
+    function getQteRestant() {
+        return $this->qteRestant;
+    }
+
+    function setQteRestant($qteRestant) {
+        $this->qteRestant = $qteRestant;
+    }
+
 }

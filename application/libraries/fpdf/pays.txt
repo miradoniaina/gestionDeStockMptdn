@@ -1,0 +1,4 @@
+1;Rakoto יי;Roy;H;Coordonateur
+2;Arione;Joy;H;Photographe
+3;Rabe;Loic;H;Directeur
+4;Rasoa;Jenny;F;Secretaire

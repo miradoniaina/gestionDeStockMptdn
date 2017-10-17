@@ -72,25 +72,25 @@ class InventaireStockController extends MY_Controller {
 
 	foreach($ret as $row){
 		fputs ($fp,$guill);
-			fputs ($fp,$row->reference_materiel);
+			fputs ($fp,$row->getReference());
 		fputs ($fp,$guill);
 
 			fputs ($fp,$sep);
 
 		fputs ($fp,$guill);
-			fputs ($fp,$row->designation);
+			fputs ($fp,$row->getMateriel());
 		fputs ($fp,$guill);
 
 			fputs ($fp,$sep);
 
 		fputs ($fp,$guill);
-			fputs ($fp,$row->quantite_restant);
+			fputs ($fp,$row->getQuantiteStock());
 		fputs ($fp,$guill);
 
 			fputs ($fp,$sep);
 
 		fputs ($fp,$guill);
-			fputs ($fp,$row->unite);
+			fputs ($fp,$row->getUnite());
 		fputs ($fp,$guill);
 
 			fputs ($fp,$sep);

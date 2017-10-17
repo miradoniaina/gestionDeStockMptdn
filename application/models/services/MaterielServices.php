@@ -26,8 +26,7 @@ class MaterielServices extends BaseService{
                 . "JOIN famille f "
                 . "ON m.id_famille=f.id_famille WHERE "
                 . "f.id_famille=". $idFamille
-                . " AND m.designation LIKE '%".$nomMateriel."%'";
-        
+                . " AND lower(m.designation) LIKE lower('%".$nomMateriel."%')";
         
         return $this->db->query($sql)->result();
     }

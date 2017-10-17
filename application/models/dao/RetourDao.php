@@ -23,7 +23,8 @@ class RetourDao extends BaseService {
         try {
             $sql = "INSERT INTO retour_materiel(
             id_retour_materiel, id_personnel, date_retour, commentaire)
-    VALUES (nextval('retour_materiel_id_retour_materiel_seq'), " . $this->session->userdata("id_personnel") . " , '" . $transferModele->getDateTransfert() . "' , '" . $transferModele->getCommentaire() . "')";
+    VALUES (nextval('retour_materiel_id_retour_materiel_seq'), " . $transferModele->getIdPersonnel() . " , '" . $transferModele->getDateTransfert() . "' , '" . $transferModele->getCommentaire() . "')";
+            
             
             $this->db->query($sql);
         } catch (Exception $ex) {

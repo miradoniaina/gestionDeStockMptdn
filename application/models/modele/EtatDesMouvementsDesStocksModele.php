@@ -80,6 +80,4 @@ class EtatDesMouvementsDesStocksModele extends BaseModele {
     function setUnite($unite) {
         $this->unite = $unite;
     }
-
-
 }
